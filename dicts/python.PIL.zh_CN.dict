@@ -1,0 +1,648 @@
++-*/PIL p 
++-*/+-*/Image p 图像核心模块
+坐标体系:(0,0)是左上角
++-*/+-*/+-*/FLIP_LEFT_RIGHT   d 左右翻转
++-*/+-*/+-*/FLIP_TOP_BOTTOM	  d 上下翻转
++-*/+-*/+-*/ROTATE_90	  d 逆时针旋转90度 
++-*/+-*/+-*/ROTATE_180	  d 旋转180度 
++-*/+-*/+-*/ROTATE_270	  d 顺时针旋转90度
++-*/+-*/+-*/NEAREST d 近邻模式
++-*/+-*/+-*/BILINEAR d 双线性模式
++-*/+-*/+-*/BICUBIC d 双三次模式
++-*/+-*/+-*/ANTIALIAS d 平滑模式
++-*/+-*/+-*/EXTENT	d 剪切矩形变换
++-*/+-*/+-*/AFFINE	d 仿射变换
++-*/+-*/+-*/QUAD	d 四边形变换,原图四边形->新图
++-*/+-*/+-*/MESH	d 四边形变换,原图->新图四边形
++-*/+-*/+-*/new f 创建新的image对象
+Image.new(mode, size) => image
+Image.new(mode, size, color) => image
+  mode:	  字符串
+    1	  1位黑白图像，1个字节1个像素
+    L	  8位灰度图像
+    P	  8位调色板图像
+    RGB	  24位彩色图像
+    RGBA  24位彩色带透明通道图像
+    CMYK  32位印刷图像
+    YCbCr 24位视频格式图像
+    I	  像素为32位有符号整数
+    F	  像素为32位浮点数
+    LA	  8位带通道灰度图像
+    RGBX RGBa
+  size:	  2元素元组(宽,高)
+  color:  字符串,填充色
+    十六进制模式如"#rgb","#rrggbb"
+    rgb模式如"rgb(255,0,0)","rgb(100%,0%,0%)"
+    hsl模式如"hsl(0,100%,49%)"
+    名称模式如"red","White"
+    如设为None图像将不初始化，默认填满黑色0
++-*/+-*/+-*/open f 由图像文件生成image对象
+Image.open(infile) => image
+Image.open(infile, mode) => image
+  infile: 文件名或文件对象
+  mode:	  字符串
+    1	  1位黑白图像，1个字节1个像素
+    L	  8位灰度图像
+    P	  8位调色板图像
+    RGB	  24位彩色图像
+    RGBA  24位彩色带透明通道图像
+    CMYK  32位印刷图像
+    YCbCr 24位视频格式图像
+    I	  像素为32位有符号整数
+    F	  像素为32位浮点数
+    LA	  8位带通道灰度图像
+    RGBX RGBa
+打开时并没有马上读取数据
++-*/+-*/+-*/blend f 使用透明度参数合成图像为新的image对象
+Image.blend(image1, image2, alpha) => image
+    相当于 out = image1 * (1.0 - alpha) + image2 * alpha
+    两个图像大小要一样
++-*/+-*/+-*/composite f 使用蒙版合成两个图像为新的image对象
+Image.composite(image1, image2, mask) => image
+  mask:	  "1", "L","RGBA"模式蒙板图像
+    三个图像大小要一样
++-*/+-*/+-*/eval f 对图像的每个像素作处理生成新的image对象
+Image.eval(image, function) => image
++-*/+-*/+-*/frombuffer f 由数据生成image对象
+Image.frombuffer(mode, size, data) => image
+Image.frombuffer(mode, size, data, decoder, parameters) => image
+   im = Image.frombuffer(mode, size, data, "raw", mode, 0, 1)
+   支持图像内存共享的模式有"L","RGBX","RGBA","CMYK"
++-*/+-*/+-*/fromstring f 由字符串像素数据生成image对象
+Image.fromstring(mode, size, data) => image
+Image.fromstring(mode, size, data, decoder, parameters) => image
++-*/+-*/+-*/merge f 组合多个通道为一个新的图像
+Image.merge(mode, bands) => image
+  mode描述的是图像格式，bands多个图像将按mode给出的方式作为各通道来组合成图像
+  所有bands大小必须相同
+  mode:	  字符串
+    1	  1位黑白图像，1个字节1个像素
+    L	  8位灰度图像
+    P	  8位调色板图像
+    RGB	  24位彩色图像
+    RGBA  24位彩色带透明通道图像
+    CMYK  32位印刷图像
+    YCbCr 24位视频格式图像
+    I	  像素为32位有符号整数
+    F	  像素为32位浮点数
+    LA	  8位带通道灰度图像
+    RGBX RGBa
++-*/+-*/+-*/Image c 图像类 
++-*/+-*/+-*/+-*/convert m 转换模式生成新的image对象
+im.convert(mode) => image
+im.convert(mode, matrix) => image
+    rgb2xyz = (
+        0.412453, 0.357580, 0.180423, 0,
+        0.212671, 0.715160, 0.072169, 0,
+        0.019334, 0.119193, 0.950227, 0 )
+    RGB图像可使用矩阵转换为新的RGB或灰阶图像
+    out = im.convert("RGB", rgb2xyz)
+  mode:	  字符串
+    1	  1位黑白图像，1个字节1个像素
+    L	  8位灰度图像
+    P	  8位调色板图像
+    RGB	  24位彩色图像
+    RGBA  24位彩色带透明通道图像
+    CMYK  32位印刷图像
+    YCbCr 24位视频格式图像
+    I	  像素为32位有符号整数
+    F	  像素为32位浮点数
+    LA	  8位带通道灰度图像
+    RGBX RGBa
++-*/+-*/+-*/+-*/copy m 复制一个image对象
+im.copy() => image
++-*/+-*/+-*/+-*/crop m 裁剪图像生成一个新的image对象
+im.crop(box) => image
+  box:	 裁剪矩形的4元组(左,上,右,下)
++-*/+-*/+-*/+-*/draft m 配置加载图像的方式
+im.draft(mode, size)
+  如果图像已加载则没有效果
++-*/+-*/+-*/+-*/filter m 使用滤镜生成新的image对象
+im.filter(filter) => image
+  filter:
+      ImageFilter.BLUR 	                模糊滤镜
+      ImageFilter.CONTOUR               轮廓滤镜
+      ImageFilter.DETAIL                清晰滤镜
+      ImageFilter.EDGE_ENHANCE        	边界加强
+      ImageFilter.EDGE_ENHANCE_MORE 	边界加强(阀值更大)
+      ImageFilter.EMBOSS 	        浮雕滤镜
+      ImageFilter.FIND_EDGES 	        边界滤镜
+      ImageFilter.SMOOTH 	        平滑滤镜
+      ImageFilter.SMOOTH_MORE 	        平滑滤镜(阀值更大)
+      ImageFilter.SHARPEN 	        锐化滤镜
++-*/+-*/+-*/+-*/fromstring m 从数据加载图像
+im.fromstring(data)
+im.fromstring(data, decoder, parameters)
++-*/+-*/+-*/+-*/getbands m 获得各通道的名称
+im.getbands() => tuple of strings
+  例如RGB图像将返回("R", "G", "B").
++-*/+-*/+-*/+-*/getbbox m 计算能容下实际图像的方形位置
+im.getbbox() => 4-tuple or None
+  返回矩形的4元组(左,上,右,下)
++-*/+-*/+-*/+-*/getcolors m 统计颜色数量
+im.getcolors() => a list of (count, color) tuples or None
+im.getcolors(maxcolors) => a list of (count, color) tuples or None
+  maxcolors:  如颜色的数量超过此值将停止计算返回None
++-*/+-*/+-*/+-*/getdata m 获取图像数据，像素数据按行生成
+im.getdata() => sequence
++-*/+-*/+-*/+-*/getextrema m 获取图像最小和最大的值
+im.getextrema() => 2-tuple
+  只适用'L'图像
++-*/+-*/+-*/+-*/getpixel m 获取某点的像素
+im.getpixel(xy) => value or tuple
+  xy:	  (x,y)
+  如果图像是多层的图像，将返回元组
++-*/+-*/+-*/+-*/histogram m 获取图像的灰度直方图
+im.histogram() => list
+im.histogram(mask) => list
+  mask  蒙板图像，必须是"1"或"L"模式同大小图，用以筛选像素
++-*/+-*/+-*/+-*/load m 加载图像(一般不需要，会自动加载)
+  返回图像数据对象，对此对象操作速度会快于getpixel和putpixel
+	pix = im.load()
+	print pix[x, y]
+	pix[x, y] = value
++-*/+-*/+-*/+-*/paste m 将另一图像粘贴到此图像里
+im.paste(image, box)
+  box:	 粘贴位置矩形的4元组(左,上,右,下),另一图像的大小需符合此矩形
+	 或者是粘贴位置的左上角坐标(x,y)
+	 或者是None(0,0)
+im.paste(image, box, mask)
+  mask:	  alpha混合系数
+im.paste(colour, box)
+  colour: 是填充色,0是黑色
+    十六进制模式如"#rgb","#rrggbb"
+    rgb模式如"rgb(255,0,0)","rgb(100%,0%,0%)"
+    hsl模式如"hsl(0,100%,49%)"
+    名称模式如"red","White"
+im.paste(colour, box, mask)
++-*/+-*/+-*/+-*/point m 转换像素生成新的image对象
+im.point(table) => image
+im.point(function) => image
+    out = im.point(lambda i: i * 1.2 + 10)
+im.point(table, mode) => image
+im.point(function, mode) => image
++-*/+-*/+-*/+-*/putalpha m 存入新的透明通道
+im.putalpha(band)
+    图像必须是RGBA或LA模式，band必须是'L'或'1'模式
++-*/+-*/+-*/+-*/putdata m 更改数据
+im.putdata(data)
+im.putdata(data, scale, offset)
+    scale,offset为校正系数
+    pixel = value * scale + offset
++-*/+-*/+-*/+-*/putpalette m 存入调色板
+im.putpalette(sequence)
+    sequence调色板序列，长度必须是768
++-*/+-*/+-*/+-*/putpixel m 更新某点像素颜色
+im.putpixel(xy, colour)
+  xy:	  (x,y)
+  color:  字符串,填充色,0是黑色
+    十六进制模式如"#rgb","#rrggbb"
+    rgb模式如"rgb(255,0,0)","rgb(100%,0%,0%)"
+    hsl模式如"hsl(0,100%,49%)"
+    名称模式如"red","White"
+  如果是批量数据，使用下面方法比较快
+    pix = im.load()
+    for i in range(n):
+        ...
+        pix[x, y] = value
++-*/+-*/+-*/+-*/resize m 改变图像大小生成新的image对象
+im.resize(size) => image
+im.resize(size, filter) => image
+  filter:
+	Image.NEAREST   近邻模式
+	Image.BILINEAR  双线性模式
+	Image.BICUBIC   双三次模式
+	Image.ANTIALIAS 平滑模式
+  size:	  2元素元组(宽,高)
++-*/+-*/+-*/+-*/rotate m 逆时针旋转图像生成新的image对象
+im.rotate(angle) => image
+im.rotate(angle, filter=NEAREST, expand=0) => image
+  angle:  角度
+  filter:
+	Image.NEAREST   近邻模式
+	Image.BILINEAR  双线性模式
+	Image.BICUBIC   双三次模式
+	Image.ANTIALIAS 平滑模式
+  expand: 如果为真，会自动扩大图像以容下旋转的图像
++-*/+-*/+-*/+-*/save m 保存图像
+im.save(outfile, options...)
+im.save(outfile, format, options...)
+  outfile: 文件名或文件对象,可自动根据后缀识别要保存的格式
+  format:  字符串
+	   GIF  保存格式为GIF87a
+	   BMP JPEG PCX PNG PPM TIFF XBM PDF
++-*/+-*/+-*/+-*/seek m 定位到某一帧
+im.seek(frame)
++-*/+-*/+-*/+-*/show m 显示图像
+im.show()
+  在unix下需有xv程式
++-*/+-*/+-*/+-*/split m 按通道生成多个image对象
+im.split() => sequence
+  例如RGB图像将生成三个颜色通道的灰阶图像
++-*/+-*/+-*/+-*/tell m 当前帧号
+im.tell() => integer
++-*/+-*/+-*/+-*/thumbnail m 修改自身图像为缩略图
+im.thumbnail(size)
+im.thumbnail(size, filter)
+  filter:
+	Image.NEAREST   近邻模式
+	Image.BILINEAR  双线性模式
+	Image.BICUBIC   双三次模式
+	Image.ANTIALIAS 平滑模式
++-*/+-*/+-*/+-*/tobitmap m 转换图像为X11图像数据
+im.tobitmap() => string
++-*/+-*/+-*/+-*/tostring m 获取图像的像素数据
+im.tostring() => string
+im.tostring(encoder, parameters) => string
++-*/+-*/+-*/+-*/transform m 变换图像生成新的image对象
+im.transform(size, method, data) => image
+im.transform(size, method, data, filter) => image
+  size:	  新图像大小(宽,高)
+  filter:
+	Image.NEAREST   近邻模式
+	Image.BILINEAR  双线性模式
+	Image.BICUBIC   双三次模式
+	Image.ANTIALIAS 平滑模式
+  method:
+	Image.EXTENT	剪切矩形
+	  data:	 裁剪矩形的4元组(左,上,右,下)
+	  此方法和crop不同的是可以拉伸缩小剪切图像
+	Image.AFFINE	仿射变换
+	  data:	 仿射矩阵的前两行的6个参数元组(a,b,c,d,e,f)
+	  对像素(x,y)作(ax+by+c,dx+ey+f)变化
+	  可用于缩放，平移，旋转
+	Image.QUAD	四边形变换,原图像里四边形导出到新图像
+	  data:	 图像里要被提取的四边形的四个顶点的8元组
+		 (x0,y0,x1,y1,x2,y2,x3,y3)
+		 顺序为左上角，左下角，右下角，右上角逆时针方向
+	Image.MESH	四边形变换,原图像映射到新图像里的四边形上
+	  data:	 图像要被映射成的四边形的四个顶点的8元组
+		 (x0,y0,x1,y1,x2,y2,x3,y3)是新图像里的坐标
+		 顺序为左上角，左下角，右下角，右上角逆时针方向
++-*/+-*/+-*/+-*/transpose m 旋转图像生成新的image对像
+im.transpose(method) => image
+  method:
+	Image.FLIP_LEFT_RIGHT	  左右翻转
+	Image.FLIP_TOP_BOTTOM	  上下翻转
+	Image.ROTATE_90		  逆时针旋转90度 
+	Image.ROTATE_180	  旋转180度 
+	Image.ROTATE_270	  顺时针旋转90度
++-*/+-*/+-*/+-*/verify m 检验图像文件是否损坏
+im.verify()
+    如在使用此函数后要读取图像数据，必须重新打开图像文件
+    如检验发现错误，将抛出异常
++-*/+-*/+-*/+-*/format d 图像文件格式(字符串如JPEG)
++-*/+-*/+-*/+-*/mode d 图像模式(字符串)
+    1	  1位黑白图像，1个字节1个像素
+    L	  8位灰度图像
+    P	  8位调色板图像
+    RGB	  24位彩色图像
+    RGBA  24位彩色带透明通道图像
+    CMYK  32位印刷图像
+    YCbCr 24位视频格式图像
+    I	  像素为32位有符号整数
+    F	  像素为32位浮点数
+    LA	  8位带通道灰度图像
+    RGBX RGBa
++-*/+-*/+-*/+-*/size d 图像大小(宽,高)二元组
++-*/+-*/+-*/+-*/palette d 调色板
++-*/+-*/+-*/+-*/info d  图像有关信息(字典)
+info
+    FLI	  duration保存帧间隔的毫秒数
+    FLC	  duration保存帧间隔的毫秒数
+    GIF	  background默认背景色
+    	  duration保存帧间隔的毫秒数
+	  transparency透明色
+	  version是GIF87a或GIF89a
+    PNG   gamma
+	  transparency透明色(保存时可用)
+	  optimize是否压缩(保存时可用)
+	  bits像素位数(保存时可用)
+    JPEG  jfif标志
+	  adobe标志
+	  progression是否渐进变化(保存时可用)
+	  quality图像质量1-95,默认75(保存时可用)
+	  optimize是否优化(保存时可用)
+	  dpi二元组通常为(96,96)
+	  exif附加信息
++-*/+-*/ImagePath p 图像路经模块
++-*/+-*/+-*/Path f 创建路径对象
+ImagePath.Path(coordinates)
+  coordinates  可以是坐标(x,y)序列，也可以是数字序列(x0,y0,x1,y1..)
++-*/+-*/+-*/+-*/compact m 简化路经，消除重复点
+p.compact(distance=2) -> count
+  distance   小于此距离的点将合并为一个点
+  返回路径上的点数目
++-*/+-*/+-*/+-*/getbbox m 获取容来路径的最小矩形
+p.getbbox() -> 4-tuple
+  返回4元组(左,上,右,下)
++-*/+-*/+-*/+-*/map m  对路径节点作处理
+p.map(function)
++-*/+-*/+-*/+-*/tolist m 生成点列表
+p.tolist() -> list
+p.tolist(flat=0) -> list
+  flat如为1则返回(x0,y0,x1,y1,..)否则返回((x0,y0),(x1,y1),..)
++-*/+-*/+-*/+-*/transform m 矩阵变换
+p.transform(matrix)
+  matrix  (a, b, c, d, e, f)
+    xOut = xIn * a + yIn * b + c
+    yOut = xIn * d + yIn * e + f
++-*/+-*/ImageChops p 图像颜色混合模块
+只支持'L'或'RGB'模式的图像
++-*/+-*/+-*/constant f 根据给定像素数值填充生成同大小的图像
+ImageChops.constant(image, value) => image
++-*/+-*/+-*/duplicate f 复制图像生成新的image对象
+ImageChops.duplicate(image) => image
++-*/+-*/+-*/invert f 对图像反色处理,生成新的image对象
+ImageChops.invert(image) => image
++-*/+-*/+-*/lighter f  混合两个图像，使用变亮模式,生成新的image对象
+ImageChops.lighter(image1, image2) => image
+    out = max(image1,image2)
++-*/+-*/+-*/darker f   混合两个图像，使用变暗模式,生成新的image对象
+ImageChops.darker(image1, image2) => image
+    out = min(image1,image2)
++-*/+-*/+-*/difference f 混合两个图像，使用差值模式(常用于找不同)
+ImageChops.difference(image1, image2) => image
+    out = abs(image1 - image2)
++-*/+-*/+-*/multiply f 混合两个图像，使用相乘模式(也叫正片叠底或复合模式)
+ImageChops.multiply(image1, image2) => image
+    out = image1 * image2 / MAX
+    画图时常用的模式
++-*/+-*/+-*/screen f 混合两个图像，使用掩蔽模式(也叫滤色模式或屏幕模式)
+ImageChops.screen(image1, image2) => image
+    out = MAX - ((MAX - image1) * (MAX - image2) / MAX)
++-*/+-*/+-*/add f 混合两个图像，使用相加模式(常用于通道处理)
+ImageChops.add(image1, image2, scale, offset) => image
+  scale  缩放因子，默认为1.0  offset 补偿值，默认为0.0
+    out = (image1 + image2) / scale + offset
++-*/+-*/+-*/subtract f  混合两个图像，使用减去模式(常用于通道处理)
+ImageChops.subtract(image1, image2, scale, offset) => image
+  scale  缩放因子，默认为1.0  offset 补偿值，默认为0.0
+    out = (image1 - image2) / scale + offset
++-*/+-*/+-*/blend f 使用透明度参数合成图像为新的image对象
+ImageChops.blend(image1, image2, alpha) => image
+    相当于 out = image1 * (1.0 - alpha) + image2 * alpha
++-*/+-*/+-*/composite f 使用蒙版合成两个图像为新的image对象
+ImageChops.composite(image1, image2, mask) => image
+  mask:	  "1", "L","RGBA"模式蒙板图像
++-*/+-*/+-*/offset f 移动图像生成新的image对象
+ImageChops.offset(xoffset, yoffset) => image
+  xoffset,yoffset为偏移距离，如未给yoffset则认为yoffset等于xoffset
++-*/+-*/ImageEnhance p 图像调整模块
++-*/+-*/+-*/Color c 颜色调整器(类似彩电的色彩调整)
+ImageEnhance.Color(image)
++-*/+-*/+-*/+-*/enhance m 按参数对图像作色彩调整生成新的image对象
+enhancer.enhance(factor) => image
+  factor   调整系数 1.0即原图像,0.0为黑白图像,大于1色彩越鲜艳
++-*/+-*/+-*/Brightness c 亮度调整器
+ImageEnhance.Brightness(image)
++-*/+-*/+-*/+-*/enhance m 按参数对图像作明暗调整生成新的image对象
+enhancer.enhance(factor) => image
+  factor   调整系数 1.0即原图像,0.0为纯黑图像,大于1图像越亮
++-*/+-*/+-*/Contrast c 对比度调整器
+ImageEnhance.Contrast(image) 
++-*/+-*/+-*/+-*/enhance m 按参数对图像作对比度调整生成新的image对象
+enhancer.enhance(factor) => image
+  factor   调整系数 1.0即原图像,0.0为纯灰色图像,大于1图像对比度越强
++-*/+-*/+-*/Sharpness c 锐度调整器
+ImageEnhance.Sharpness(image)
++-*/+-*/+-*/+-*/enhance m 按参数对图像作锐度调整生成新的image对象
+enhancer.enhance(factor) => image
+  factor   调整系数 1.0即原图像,0.0为模糊图像,2.0为锐利图像
++-*/+-*/ImageFilter p 滤镜模块
++-*/+-*/+-*/BLUR 	      c         模糊滤镜
++-*/+-*/+-*/CONTOUR           c   轮廓滤镜
++-*/+-*/+-*/DETAIL            c   清晰滤镜
++-*/+-*/+-*/EDGE_ENHANCE      c 	边界加强
++-*/+-*/+-*/EDGE_ENHANCE_MORE c 边界加强(阀值更大)
++-*/+-*/+-*/EMBOSS 	      c 浮雕滤镜
++-*/+-*/+-*/FIND_EDGES 	      c 边界滤镜
++-*/+-*/+-*/SMOOTH 	      c 平滑滤镜
++-*/+-*/+-*/SMOOTH_MORE       c         平滑滤镜(阀值更大)
++-*/+-*/+-*/SHARPEN 	      c 锐化滤镜
++-*/+-*/+-*/Kernel c
+TODO:
+Kernel(size, kernel, scale=None, offset=0)
+
+(New in 1.1.5) Create a convolution kernel of the given size. In the current version, the size must be either (3, 3) or (5, 5), and the kernel argument must be a sequence containing 9 or 25 integer or floating point weights.
+
+If the scale argument is given, the result of applying the kernel to each pixel is divided by the scale value. The default is the sum of the kernel weights.
+
+If the offset argument is given, the value is added to the result, after it has been divided by the scale.
++-*/+-*/+-*/RankFilter c
+TODO:
+RankFilter(size, rank)
+
+(New in 1.1.5) Create a rank filter of the given size. For each pixel in the input image, the rank filter sorts all pixels in a (size, size) environment by pixel value, and copies the rank'th value to the output image.
++-*/+-*/+-*/MinFilter c
+TODO:
+MinFilter(size=3)
+
+(New in 1.1.5) Create a min filter of the given size. For each pixel in the input image, this filter copies the smallest pixel value from a (size, size) environment to the output image.
++-*/+-*/+-*/MedianFilter c
+TODO:
+MedianFilter(size=3)
+
+(New in 1.1.5) Create a median filter of the given size. For each pixel in the input image, this filter copies the median pixel value from a (size, size) environment to the output image.
++-*/+-*/+-*/MaxFilter c
+TODO:
+MaxFilter(size=3)
+
+(New in 1.1.5) Create a max filter of the given size. For each pixel in the input image, this filter copies the largest pixel value from a (size, size) environment to the output image.
++-*/+-*/+-*/ModeFilter c
+TODO:
+ModeFilter(size=3)
+
+(New in 1.1.5) Create a mode filter of the given size. For each pixel in the input image, this filter copies the most common pixel value in a (size, size) environment to the output image. If no pixel value occurs more than once, the original pixel value is used.
++-*/+-*/ImageStat p 图像数据统计模块
++-*/+-*/+-*/Stat c 图像数据统计类
+ImageStat.Stat(image) => Stat instance
+ImageStat.Stat(image, mask) => Stat instance
+  mask 蒙板，如给出将只计算蒙板所包括的像素
+  值计算将各通道分别计算返回结果为列表
++-*/+-*/+-*/+-*/extrema d 极值min/max
++-*/+-*/+-*/+-*/count 数量
++-*/+-*/+-*/+-*/sum d 和
++-*/+-*/+-*/+-*/sum2 d 平方和
++-*/+-*/+-*/+-*/mean d 平均值
++-*/+-*/+-*/+-*/median d 中值
++-*/+-*/+-*/+-*/rms d 平方平均数
++-*/+-*/+-*/+-*/var d 方差
++-*/+-*/+-*/+-*/stddev d 标准偏差
++-*/+-*/ImageGrab p 屏幕截图模块(只用于windows)
++-*/+-*/+-*/grab f 截取屏幕生成新图像
+ImageGrab.grab() => image
+ImageGrab.grab(bbox) => image
+  bbox:	 截取矩形的4元组(左,上,右,下)
++-*/+-*/+-*/grabclipboard f 获取剪贴板里的图像
+ImageGrab.grabclipboard() => image or list of strings or None
+  返回结果可能是图像，也可能是文件名列表或None
+  可以使用isinstance来测试返回结果
+im = ImageGrab.grabclipboard()
+if isinstance(im, Image.Image):
+    ... got an image ...
+elif im:
+   for filename in im:
+       try:
+           im = Image.open(filename)
+       except IOError:
+           pass # ignore this file
+       else:
+           ... got an image ...
+else:
+    ... clipboard empty ...
++-*/+-*/ImageFont p 绘图所用字体模块
+PIL有自设的字体格式，可以使用pilfont工具转换BDF和PCF字体(X系统使用)为pil格式
+PIL还支持TrueType(ttf)格式的字体
++-*/+-*/+-*/load f  加载pil格式字体文件返回字体对象
+ImageFont.load(file) => Font instance
++-*/+-*/+-*/load_path f 在sys.path里搜索pil格式字体文件加载返回字体对象
+ImageFont.load_path(file) => Font instance
++-*/+-*/+-*/truetype f 加载ttf格式字体文件返回字体对象
+ImageFont.truetype(file, size) => Font instance
+ImageFont.truetype(file, size, encoding=value) => Font instance
+  size  字体大小
+  encoding  编码方式
+         "unic" (Unicode)
+	 "symb" (Microsoft Symbol)
+	 "ADOB" (Adobe Standard) 
+	 "ADBE" (Adobe Expert)
+	 "armn" (Apple Roman).
+  在windows下会在系统字体目录搜索file
++-*/+-*/+-*/load_default f 加载默认字体返回字体对象
++-*/+-*/+-*/ImageFont c
++-*/+-*/+-*/+-*/getsize m 获取容纳文本的面积(宽,高)
+font.getsize(text) => (width, height)
++-*/+-*/+-*/+-*/getmask m 由文本生成新图像
+font.getmask(text, mode="") => Image object
+  如果字体是抗锯齿的一般mode为'L',其它为'1'
++-*/+-*/ImageColor p 颜色模块
++-*/+-*/+-*/getrgb f 解析颜色字符串返回(红,绿,兰)三元组
+getrgb(color) => (red, green, blue)
+  color:  字符串
+    十六进制模式如"#rgb","#rrggbb"
+    rgb模式如"rgb(255,0,0)","rgb(100%,0%,0%)"
+    hsl模式如"hsl(0,100%,49%)"
+    名称模式如"red","White"
+    如不符合以上则报错
++-*/+-*/+-*/getcolor f 按给定模式获取颜色返回(红,绿,兰)三元组或数值
+getcolor(color, mode) => (red, green, blue) or integer
++-*/+-*/ImageDraw p 绘图模块
++-*/+-*/+-*/Draw f 由图像创建一个用以绘图的对象
+Draw(image) => Draw instance
++-*/+-*/+-*/+-*/arc m 画一条圆弧
+draw.arc(xy, start, end, fill=None)
+  xy:	  能容纳弧线所在椭圆的矩形范围(左,上,右,下)
+  start:  起始角度
+  end:	  结束角度，要画一个椭圆start为0，end为360
+  fill:   指定颜色
+    十六进制模式如"#rgb","#rrggbb"
+    rgb模式如"rgb(255,0,0)","rgb(100%,0%,0%)"
+    hsl模式如"hsl(0,100%,49%)"
+    名称模式如"red","White"
++-*/+-*/+-*/+-*/bitmap m 画上另一个图像
+draw.bitmap(xy, bitmap, fill=None)
+  xy:	 绘画位置矩形的4元组(左,上,右,下),另一图像的大小需符合此矩形
+	 或者是绘画位置的左上角坐标(x,y)
+  bitmap:一个image图像，必须是'1','L','RGBA'三种模式之一
+  fill:   指定颜色
+    十六进制模式如"#rgb","#rrggbb"
+    rgb模式如"rgb(255,0,0)","rgb(100%,0%,0%)"
+    hsl模式如"hsl(0,100%,49%)"
+    名称模式如"red","White"
+  如果是要纯粘贴图像可使用image.paste
++-*/+-*/+-*/+-*/chord m 画一条弧线(封闭)
+draw.chord(xy, start, end, fill=None, outline=None)
+  xy:	  能容纳弧线所在椭圆的矩形范围(左,上,右,下)
+  start:  起始角度
+  end:	  结束角度，要画一个椭圆start为0，end为360
+  fill:   指定填充颜色，如不给出则只画线
+  outline:指定线的颜色
+    十六进制模式如"#rgb","#rrggbb"
+    rgb模式如"rgb(255,0,0)","rgb(100%,0%,0%)"
+    hsl模式如"hsl(0,100%,49%)"
+    名称模式如"red","White"
++-*/+-*/+-*/+-*/ellipse m 画椭圆
+draw.ellipse(xy, fill=None, outline=None)
+  xy:	  能容纳椭圆的矩形范围(左,上,右,下)
+  fill:   指定填充颜色，如不给出则只画线
+  outline:指定线的颜色
+    十六进制模式如"#rgb","#rrggbb"
+    rgb模式如"rgb(255,0,0)","rgb(100%,0%,0%)"
+    hsl模式如"hsl(0,100%,49%)"
+    名称模式如"red","White"
++-*/+-*/+-*/+-*/line m 画直线
+draw.line(xy, fill=None, width=1)
+  xy:     连接点坐标序列，可以是((x0,y0),(x1,y1),..)形式
+	  或(x0,y0,x1,y1,...),至少两个点，将依次画上之间的直线
+  width:  线的宽度
+  fill:   指定颜色
+    十六进制模式如"#rgb","#rrggbb"
+    rgb模式如"rgb(255,0,0)","rgb(100%,0%,0%)"
+    hsl模式如"hsl(0,100%,49%)"
+    名称模式如"red","White"
++-*/+-*/+-*/+-*/pieslice m 画扇形(就像吃豆子里的那个形状)
+draw.pieslice(xy, start, end, fill=None, outline=None)
+  xy:	  能容纳扇形上弧线所在椭圆的矩形范围(左,上,右,下)
+  start:  起始角度
+  end:	  结束角度
+  fill:   指定填充颜色，如不给出则只画线
+  outline:指定线的颜色
+    十六进制模式如"#rgb","#rrggbb"
+    rgb模式如"rgb(255,0,0)","rgb(100%,0%,0%)"
+    hsl模式如"hsl(0,100%,49%)"
+    名称模式如"red","White"
++-*/+-*/+-*/+-*/point m 画点
+draw.point(xy, fill=None)
+  xy:     点坐标序列，可以是((x0,y0),(x1,y1),..)形式
+	  或(x0,y0,x1,y1,...),可以多个点
+  fill:   指定颜色
+    十六进制模式如"#rgb","#rrggbb"
+    rgb模式如"rgb(255,0,0)","rgb(100%,0%,0%)"
+    hsl模式如"hsl(0,100%,49%)"
+    名称模式如"red","White"
++-*/+-*/+-*/+-*/polygon m 画多边形
+draw.polygon(xy, fill=None, outline=None)
+  xy:     顶点坐标序列，可以是((x0,y0),(x1,y1),..)形式
+	  或(x0,y0,x1,y1,...),至少三个点
+  fill:   指定填充颜色，如不给出则只画线
+  outline:指定线的颜色
+    十六进制模式如"#rgb","#rrggbb"
+    rgb模式如"rgb(255,0,0)","rgb(100%,0%,0%)"
+    hsl模式如"hsl(0,100%,49%)"
+    名称模式如"red","White"
++-*/+-*/+-*/+-*/rectangle m 画矩形
+draw.rectangle(box, fill=None, outline=None)
+  xy:     左上角点坐标和右下角点坐标，可以是((x0,y0),(x1,y1))形式
+	  或(x0,y0,x1,y1)
+  fill:   指定填充颜色，如不给出则只画线
+  outline:指定线的颜色
+    十六进制模式如"#rgb","#rrggbb"
+    rgb模式如"rgb(255,0,0)","rgb(100%,0%,0%)"
+    hsl模式如"hsl(0,100%,49%)"
+    名称模式如"red","White"
++-*/+-*/+-*/+-*/text m 画文本
+draw.text(position, string, fill=None, font=None, anchor=None)
+  position:     文本开始的左上角点坐标(x,y)
+  font:		指定的imagefont对象
+  string:       一般使用unicode字符串
+  fill:         指定颜色
+    十六进制模式如"#rgb","#rrggbb"
+    rgb模式如"rgb(255,0,0)","rgb(100%,0%,0%)"
+    hsl模式如"hsl(0,100%,49%)"
+    名称模式如"red","White"
++-*/+-*/+-*/+-*/textsize m 计算文本在图上的(宽,高)
+draw.textsize(string, font=None) => (width, height)
+  string:       一般使用unicode字符串
+  font:		指定的imagefont对象
++-*/+-*/+-*/+-*/outline d 默认线颜色(?)
+outline 
+  对于模式为'1','L','I'的图像来说此值应是整数
+  对于模式为'P'的图像来说此值应是浮点数
+  对于模式为'RGB'的图像来说此值应是(r,g,b)三元组
++-*/+-*/+-*/+-*/fill d 默认填充色(?)
+fill
+  对于模式为'1','L','I'的图像来说此值应是整数
+  对于模式为'P'的图像来说此值应是浮点数
+  对于模式为'RGB'的图像来说此值应是(r,g,b)三元组
++-*/+-*/+-*/+-*/font d 默认字体对象(?)

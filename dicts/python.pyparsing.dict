@@ -1,0 +1,376 @@
+/*-+ vim:ft=dict:sw=2:
+/*-+ p:module c:class m:method d:data f:function M:classmethod
++-*/pyparsing p 语法解析模块
++-*/+-*/ParseResults c 解析结果
+ParseResults(toklist,name=None,asList=True,modal=True,isinstance=<built-in function isinstance>)
+  生成的对象可以像list那样操作如len,xx[0]等等，
+  也可以像object那样操作，如xx.attrname等等
+  还可以像dict那样操作，支持get,items,keys等操作
++-*/+-*/+-*/keys m 返回所有有被命名的元素的名称
++-*/+-*/+-*/pop m 移除最后一个元素
+pop(self,index=-1)
++-*/+-*/+-*/get m 按名称获取元素
+get(self,key,defaultValue=None)
++-*/+-*/+-*/insert m 插入一元素
+insert(self,index,insStr)
++-*/+-*/+-*/items m 所有有被命名的元素对
++-*/+-*/+-*/values m 所有有被命名的元素
++-*/+-*/+-*/asList m 将结果按列表形式呈现
++-*/+-*/+-*/asDict m 生成有被命名的元素字典
++-*/+-*/+-*/asXML m 将结果按XML形式呈现
+asXML(self,doctag=None,nameditemsOnly=False,indent='',formatted=True)
++-*/+-*/+-*/getName m 获取自身的名称
++-*/+-*/+-*/dump m 
+dump(self,indent='',depth=0)
++-*/+-*/ParserElement c 解析元素的抽象类
+__ini__(self,savelist=False)
++-*/+-*/+-*/copy m 生成备份
++-*/+-*/+-*/setResultsName m 命名
+setResultsName(self,name,listAllMatches=False)
+返回self
+listAllMatches为False时，如有多个同名元素，该命名将只用于最后一个
+为True时，同名元素列表为最后结果
++-*/+-*/+-*/setName m 定义用于调试的名称
+setName(self,name)
+返回self
++-*/+-*/+-*/setBreak m 用于pdb调试
+setBreak(self,breakFlag=True)
+  breakFlag为True表示可以中断，False表示禁用中断
++-*/+-*/+-*/setParseAction m 设定成功获取元素时的操作,可用于校验
+setParseAction(self,*fns,**kwargs)
+返回self
+fn的形式可以是fn(s,loc,toks),fn(loc,toks),fn(toks),fn()
+s = 需解析的整个字符串
+loc = 本元素对应的字符串
+toks = ParseResults对象，对应本元素所解析的元素
+fn如修改toks并返回修改的toks，返回值将替代原先的结果
+当然如不需要修改就无需返回任何值
+fn还可以用以校验，如不符合只需抛出ParseException即可
++-*/+-*/+-*/addParseAction m 增加成功获取元素时的操作
+addParseAction(self,*fns,**kwargs)
+返回self
+fn的形式可以是fn(s,loc,toks),fn(loc,toks),fn(toks),fn()
+s = 需解析的整个字符串
+loc = 本元素对应的字符串
+toks = ParseResults对象，对应本元素所解析的元素
+fn如修改toks并返回修改的toks，返回值将替代原先的结果
+当然如不需要修改就无需返回任何值
++-*/+-*/+-*/setFailAction m 设定如解析失败时的操作
+setFailAction(self,fn)
+返回self
+fn的形式是fn(s,loc,expr,err)
+s = 需解析的整个字符串
+loc = 本元素对应的字符串
+expr = 哪一块未解析成功
+err = 失败时的异常
+fn不返回任何值，如需要中断整个解析，可以在fn抛出ParseFatalException异常
++-*/+-*/+-*/preParse m preParse(self,instring,loc)
++-*/+-*/+-*/parseImpl m parseImpl(self,instring,loc,doActions=True)
++-*/+-*/+-*/postParse m postParse(self,instring,loc)
++-*/+-*/+-*/tryParse m tryParse(self,instring,loc)
++-*/+-*/+-*/parseString m 解析某个字符串
+parseString(self,instring,parseAll=False)
+返回ParseResults对象
+parseString有时会自动执行expandtabs()操作，为了更为准确的在自定义的操作里工作
+可以在parseString之前设定parseWithTabs，或者使用fn(s,loc,toks)来使操作更为精确
++-*/+-*/+-*/parseFile m 解析某个文件
+parseFile(self,f,parseAll=False)
+返回ParseResults对象
+f可以是文件名或类文件对象
++-*/+-*/+-*/scanString m 查找并解析字符串,依次生成多个结果
+scanString(self,instring,maxMatches=2147483647,overlap=False)
+maxMatches可以设定最多解析出多少个结果
+overlap设定是否允许重叠
+此函数是生成器，每次生成的结果包含
+*匹配的元素--一个ParseResults对象
+*匹配的开始位置
+*匹配的结束位置
++-*/+-*/+-*/searchString m 查找并解析字符串,返回结果列表
+scanString(self,instring,maxMatches=2147483647)
++-*/+-*/+-*/transformString m 查找并替换字符串
+transformString(self,instring)
++-*/+-*/+-*/suppress m 静默模式,不在结果里出现
++-*/+-*/+-*/leaveWhitespace m 禁止自动跳过空白
++-*/+-*/+-*/setWhitespcaeChars m 自定义空白字符
+setWhitespcaeChars(self,chars)
+chars默认为（空格，tab,回车，换行）
++-*/+-*/+-*/ignore m 忽略如注释之类的不必要元素
+ignore(self,other)
++-*/+-*/+-*/setDebug m 允许显示调试信息
++-*/+-*/+-*/setDebugActions m 设定调试模式时的操作
+setDebugActions(self,startAction,successAction,errorAction)
++-*/+-*/+-*/validate m 检验是否包含无限循环的模式
+validate(self,validateTrace=[])
++-*/+-*/+-*/parseWithTabs m 禁止默认的将tab转为空格的操作
++-*/+-*/+-*/setDefaultWhitespaceChars M 自定义空白字符
+setDefaultWhitespaceChars(chars)
+chars默认为（空格，tab,回车，换行）
++-*/+-*/+-*/enablePackrat M 允许使用高性能的内存模式
++-*/+-*/+-*/__add__ m +操作，返回And对象
+如Word(nums) + '.'
++-*/+-*/+-*/__sub__ m -操作，返回带停止功能的And对象
+'-'操作是'+'的变形，当前一项匹配时后一项不匹配就会报错产生ParseSyntaxException
+如Word(nums) - ('.'+Word(nums))*3，当字符串不是这种ip地址形式时就会报错
++-*/+-*/+-*/__mul__ m *操作，返回And对象
+Literal('a')*3 相当于 Literal('a')+Literal('a')+Literal('a')
+'*'操作后面可以用包含2个整数(min,max)的元组，如('-'+Word(nums))*(1,2)
++-*/+-*/+-*/__or__ m |操作，返回MatchFirst对象
+按从左到右的顺序检验匹配，如匹配就完成，后面的不再检验
++-*/+-*/+-*/__xor__ m ^操作，返回Or对象
+至少有一个匹配要能被匹配到，如果有多个匹配被匹配到，结果将使用匹配字符串最长的
++-*/+-*/+-*/__and__ m &操作，返回Each对象
+所有匹配都要能匹配
++-*/+-*/+-*/__invert__ m ~操作，返回NotAny对象
++-*/+-*/+-*/__call__ m setResultsName的命名简化版
+__call__(self,name)  相当于.setResultsName(name) 命名
+返回self
++-*/+-*/+-*/Token c 字符串匹配类
++-*/+-*/+-*/+-*/Literal c 静态字符串匹配类,前后可以没有空白
+__init__(self,matchString)
+Literal('else')可能会匹配'elseif'的前4个字符串
++-*/+-*/+-*/+-*/+-*/CaselessLiteral c 静态字符串匹配类.忽略大小写
+__init__(self,matchString)
+结果返回的是定义时的字符串，而不是所找到的不同大小写的字符串
++-*/+-*/+-*/+-*/Keyword c 关键字字符串匹配类
+__init__(self,matchString,identChars='abc...,caseless=False)
+identChars默认为所有字母数字和'_'以及'$'
+Literal('else')可能会匹配'elseif'的前4个字符串
+而Keyword('else')不会出现此情况
++-*/+-*/+-*/+-*/+-*/CaselessKeyword c 关键字字符串匹配类.忽略大小写
+__init__(self,matchString,identChars='abc...)
+结果返回的是定义时的字符串，而不是所找到的不同大小写的字符串
++-*/+-*/+-*/+-*/Word c 单词字符串匹配类
+__init__(self,initChars,bodyChars=None,min=1,max=0,exact=0,
+		asKeyword=False,excludeChars=None)
+initChars	第一个字符所允许使用的字符
+bodyChars	后面字符所允许使用的字符，如无则同initChars
+min		单词的最小长度
+max		单词的最大长度，默认不限
+exact		定长单词，如设定，min和max将无效
+excludeChars	不允许的字符，initChars和bodyChars里将剔除这些字符
++-*/+-*/+-*/+-*/CharsNotIn c 类似Word,但是以不匹配字符来定义的单词字符串匹配类
+__init__(self,notChars,min=1,max=0,exact=0)
+notChars	不允许出现的字符
+min		单词的最小长度
+max		单词的最大长度，默认不限
+exact		定长单词，如设定，min和max将无效
++-*/+-*/+-*/+-*/Regex c 以正则表达式定义的字符串匹配类
+__init__(self,pattern,flags=0)
+pattern		正则表达式
+flags		re的参数
+基本和re相同，只是结果按ParseResults形式保存
++-*/+-*/+-*/+-*/QuotedString c 类似带引号的字符串匹配类
+__init__(self,quoteChar,escChar=None,escQuote=None,multiline=Fasle,
+		unquoteResults=True,endQuoteChar=None)
+quoteChar	定义相当于引号的字符串，可以用"'''"这样的定义
+escChar		转义字符，通常为'\'，默认为空
+escQuote	转义引号的字符，如"dfd""dd"里的'"',如dblQuotedString
+multiline	是否允许多行
+unquoteResults	结果是否保留引号，默认保留
+endQuoteChar	结尾的引号定义，默认同quoteChar
++-*/+-*/+-*/+-*/White c 定义空白的字符串匹配类
+__init__(self,ws=' \t\r\n',min=1,max=0,exact=0)
+ws		定义相当于空白的字符
+min		单词的最小长度
+max		单词的最大长度，默认不限
+exact		定长单词，如设定，min和max将无效
+通常不需要，默认pyparsing会自动过滤掉空白。
++-*/+-*/+-*/+-*/+-*/whiteStrs d 空白字符的显示字符串
+默认为{'\t':'<TAB>','\n':'<LF>','\x0c':'<FF>','\r':'<CR>',' ':'<SPC>'}
++-*/+-*/+-*/+-*/Empty c 空字符串匹配类,总是匹配的
+通常用于debug
++-*/+-*/+-*/+-*/NoMatch c Empty的反例,总是不匹配的
+通常用于debug
++-*/+-*/+-*/PositionToken _ 位置匹配
++-*/+-*/+-*/+-*/StringStart c 匹配整个文本的开始处
++-*/+-*/+-*/+-*/StringEnd c 匹配整个文本的结束处
++-*/+-*/+-*/+-*/LineStart c 匹配行的开头
++-*/+-*/+-*/+-*/LineEnd c 匹配行的结尾
++-*/+-*/+-*/+-*/WordStart c 匹配单词开头
+__init__(self,wordChars='0123456789abc...)
+默认的单词定义是printables，如果想要正则表达式里的那种，
+可以使用WordStart(alphanums)来定义
++-*/+-*/+-*/+-*/WordEnd c 匹配单词结尾
+__init__(self,wordChars='0123456789abc...)
+默认的单词定义是printables，如果想要正则表达式里的那种，
+可以使用WordEnd(alphanums)来定义
++-*/+-*/+-*/+-*/GotoColumn c 匹配某列
+__init__(self,colno)
+colno列号，通常用于表格形式的文本
++-*/+-*/+-*/ParseExpression c 组合匹配抽象类
+__init__(self,exprs,savelist=False)
++-*/+-*/+-*/+-*/And c 接连匹配,自动忽略空白
+通常由'+'操作产生，如Word(nums) + '.'
+'*'操作产生的也是此类对象，如Literal('a')*3
+'*'操作后面可以用包含2个整数(min,max)的元组，如('-'+Word(nums))*(1,2)
+'-'操作是'+'的变形，当前一项匹配时后一项不匹配就会报错产生ParseSyntaxException
+如Word(nums) - ('.'+Word(nums))*3，当字符串不是这种ip地址形式时就会报错
++-*/+-*/+-*/+-*/Or c 多样式匹配,使用最长的匹配
+通常由'^'操作产生，至少有一个子匹配能被匹配到，如果有多个子匹配被匹配到，
+结果将使用匹配字符串最长的
++-*/+-*/+-*/+-*/MatchFirst c 多样式匹配,使用最先匹配到的匹配
+通常由'|'操作产生，按从左到右的顺序检验子匹配，如匹配就完成，后面的不再检验
++-*/+-*/+-*/+-*/Each c 多样式匹配,所有子模式都要被匹配
+通常由'&'操作产生，所有子匹配都要能匹配
++-*/+-*/+-*/ParseElementEnhance c 高级匹配抽象类
+__init__(self,exprs,savelist=False)
++-*/+-*/+-*/+-*/Optional c ?,可选匹配，如未匹配，则使用默认项，匹配0个或1个
+__init__(self,exprs,default=NullToken())
++-*/+-*/+-*/+-*/ZeroOrMore c *,匹配多个或不匹配
+__init__(self,exprs)
++-*/+-*/+-*/+-*/OneOrMore c +,匹配多个
+__init__(self,exprs)
++-*/+-*/+-*/+-*/FollowedBy c 后检验匹配，只检验，不会包含结果
+__init__(self,exprs)
+此匹配相当于位置匹配，不会包含任何数据结果，只做检验
+如'a'+FollowedBy(Word(nums))+Word(alphanums)
++-*/+-*/+-*/+-*/NotAny c 后检验不可匹配，只检验，不会包含结果
+__init__(self,exprs)
+通常用'~'操作,注意用(),如'a'+(~Word(nums))+Word(alphanums)
++-*/+-*/+-*/+-*/SkipTo c 捕获所有匹配，直到特定的模式被匹配到为止
+__init__(self,other,include=False,ignore=None,failOn=False)
+include		如果设为True，结束的特定模式也包含在内
+comm='/*'+SkipTo(Literal('*/'))+'*/'
++-*/+-*/+-*/+-*/Forward c 构建自嵌套的匹配
+__init__(self)
+一般先构造对象，然后再使用<<操作构建匹配,如
+expr=Forward()
+list='['+ZeroOrMore(expr+',')+expr+']'
+expr<<(Word(nums)|list)
++-*/+-*/+-*/+-*/TokenConverter c 转换结果组合抽象类
+__init__(self,exprs,savelist=False)
++-*/+-*/+-*/+-*/+-*/Combine c 把所有子匹配组合起来为一个匹配，中间不忽略空白
+__init__(self,expr,joinString='',adjacent=True)
+joinString		间隔子匹配的字符串
+adjacent		是否按原始顺序排列
++-*/+-*/+-*/+-*/+-*/Suppress c 结果里忽略包含的匹配内容
+__init__(self,expr)
+expr可以是匹配对象也可以是字符串
+同expr.suppress()
++-*/+-*/+-*/+-*/+-*/Group c 将匹配项转为列表，通常用于ZeroOrMore或OneOrMore
++-*/+-*/+-*/+-*/+-*/Dict c 将匹配项转为字典，通常用于报表文本
+类似Group,不同的是每个子匹配都会以其第一项匹配的内容作索引，一般用于二维数组
++-*/+-*/ParseBaseException e 解析异常的抽象类
+__init__(self,pstr,loc=0,msg=None,elem=None)
++-*/+-*/+-*/markInputline m 在原始文本里标记出出错的地方
+markInputline(self,markerString='>!<')
++-*/+-*/+-*/ParseException e 语法解析异常
+__init__(self, pstr, loc=0, msg=None, elem=None)
++-*/+-*/+-*/+-*/line d 出错的行内容
++-*/+-*/+-*/+-*/lineno d 出错的行号
++-*/+-*/+-*/+-*/col d 出错的列号
++-*/+-*/+-*/ParseFatalException e 解析时操作异常
++-*/+-*/+-*/ParseSyntaxException e 解析时语义异常,通常出现在'-'连接的匹配里
++-*/+-*/RecursiveGrammarException e 语法检查异常,通常是不正确的死循环匹配定义
++-*/+-*/col f 给出当前位置的所在列号
+col(loc, string)
+loc		位置，以0开始
+string		字符串
+列号以1开始
++-*/+-*/lineno f 给出当前位置的所在行号
+lineno(loc, string)
+loc		位置，以0开始
+string		字符串
+行号以1开始
++-*/+-*/line f 给出当前位置的所在行内容
+line(loc, string)
+loc		位置，以0开始
+string		字符串
+通常用于显示出错信息
++-*/+-*/nullDebugAction f 调试用操作，用于输出调试信息
++-*/+-*/traceParseAction f 调试装饰器，用于包裹其他操作
++-*/+-*/delimitedList f 以列表格式匹配
+delimitedList(expr, delim=',', combine=False)
+combine			如为True,则结果为一个包含分隔符的字符串
+			如为False,则结果为列表
++-*/+-*/countedArray f
+countedArray(expr, intExpr=None)
+Helper to define a counted list of expressions. 
++-*/+-*/matchPreviousLiteral f
+matchPreviousLiteral(expr)
+Helper to define an expression that is indirectly defined from the tokens matched in a previous expression, that is, it looks for a 'repeat' of a previous expression. 
++-*/+-*/matchPreviousExpr f
+matchPreviousExpr(expr)
+Helper to define an expression that is indirectly defined from the tokens matched in a previous expression, that is, it looks for a 'repeat' of a previous expression. 
++-*/+-*/oneOf f 由关键字列表生成MatchFirst匹配对象
+oneOf(strs, caseless=False, useRegex=True)
+strs		可以是以空白分割的字符串，也可以是列表
+如oneOf('''ha fa wa''')
+不管输入的顺序如何，返回的MatchFirst匹配对象将自动性能优化其顺序
++-*/+-*/dictOf f
+dictOf(key, value)
+Helper to easily and clearly define a dictionary by specifying the respective patterns for the key and value. 
++-*/+-*/originalTextFor f
+originalTextFor(expr, asString=True)
+Helper to return the original, untokenized text for a given expression. 
++-*/+-*/srange f 生成给定范围的Word对象
+srange(s)
+s	是正则表达式里的[]范围
+如srange('[0-9A-Fa-f]')
++-*/+-*/matchOnlyAtCol f
+matchOnlyAtCol(n)
+Helper method for defining parse actions that require matching at a specific column in the input text. 
++-*/+-*/replaceWith f 生成一个简单的替换操作函数
+replaceWith(replStr)
+例如Literal("&nbsp;").setParseAction(replaceWith("<BLANK>"))
++-*/+-*/removeQuotes f 一个去除引号的操作函数
+removeQuotes(s, l, t)
+例如quotedString.setParseAction(removeQuotes)
++-*/+-*/upcaseTokens f 转换为大写的操作函数
+upcaseTokens(s, l, t)
++-*/+-*/downcaseTokens f 转换为小写的操作函数
+downcaseTokens(s, l, t)
++-*/+-*/getTokensEndLoc f
+getTokensEndLoc()
+Method to be called from within a parse action to determine the end location of the parsed tokens. 
++-*/+-*/makeHTMLTags f 生成html<x ..></x>的2个匹配项
+makeHTMLTags(tagStr)
+返回2个匹配，第一个匹配如<a ff="...">，第二个匹配如</a>
+第一个匹配里会自动建立attr属性字典，如<img src='xx' alt='ss'>解析以后
+可以直接调用结果的.src或.alt
++-*/+-*/makeXMLTags f 生成xml<x ..></x>的2个匹配项,较严格，区分大小写
+makeXMLTags(tagStr)
+返回2个匹配，第一个匹配如<a ff="...">，第二个匹配如</a>
++-*/+-*/withAttribute f
+withAttribute(*args, **attrDict)
+Helper to create a validating parse action to be used with start tags created with makeXMLTags or makeHTMLTags. 
++-*/+-*/operatorPrecedence f
+operatorPrecedence(baseExpr, opList)
+Helper method for constructing grammars of expressions made up of operators working in a precedence hierarchy. 
++-*/+-*/nestedExpr f 生成可自嵌套的如[]{}类匹配项
+nestedExpr(opener='(', closer=')', content=None, ignoreExpr=quotedString using single or double quotes)
+Helper method for defining nested lists enclosed in opening and closing delimiters ("(" and ")" are the default). 
++-*/+-*/indentedBlock f
+indentedBlock(blockStatementExpr, indentStack, indent=True)
+Helper method for defining space-delimited indentation blocks, such as those used to define block statements in Python source code. 
++-*/+-*/replaceHTMLEntity f
+replaceHTMLEntity(t)
++-*/+-*/alphas d 字母字符
++-*/+-*/nums d 数字字符
++-*/+-*/alphanums d 字母数字字符
++-*/+-*/alphas8bit d a string containing alphabetic 8-bit characters:
++-*/+-*/punc8bit d
++-*/+-*/printables d 同string.printable,不包含空格
++-*/+-*/restOfLine d 所有字符，除了换行，相当于.*
++-*/+-*/empty d 全局Empty对象;总是被匹配
++-*/+-*/sglQuotedString d 单引号字符串匹配对象，可以有空白，但不能有多行
++-*/+-*/dblQuotedString d 双引号字符串匹配对象，可以有空白，但不能有多行
++-*/+-*/quotedString d sglQuotedString | dblQuotedString, 引号字符串匹配对象
++-*/+-*/unicodeString d 'u'+quotedString, u形式的引号字符串匹配对象
++-*/+-*/cStyleComment d c语言形式的注释匹配对象，/**/，不支持嵌套,可以多行
++-*/+-*/dblSlashComment d //形式的注释匹配对象
++-*/+-*/cppStyleComment d c++语言形式的注释匹配对象
++-*/+-*/javaStyleComment d java语言形式的注释匹配对象
++-*/+-*/pythonStyleComment d python语言形式的注释匹配对象
++-*/+-*/htmlComment d html形式的注释匹配对象 '<!--'-->',可以多行，不支持嵌套
++-*/+-*/commaSeparatedList d 
+similar to delimitedList, except that the list expressions can be any text value, or a quoted string; quoted strings can safely include commas without incorrectly breaking the string into two tokens
++-*/+-*/lineStart d LineStart实例
++-*/+-*/lineEnd d LineEnd实例
++-*/+-*/stringStart d StringStart实例
++-*/+-*/stringEnd d StringEnd实例
++-*/+-*/commonHTMLEntity d &gt; &lt; &amp; &nbsp; &quot;
++-*/+-*/anyOpenTag d <..>xml形式的开头匹配对象
++-*/+-*/anyCloseTag d </..>xml形式的结尾匹配对象
+
+

@@ -1,0 +1,248 @@
++-*/bs4 p 树状形式解析html模块
+所有操作如使用诸如tag名称等参数都要使用小写(如果制定使用xml模块则区分大小写)
++-*/+-*/Tag c 文档里的<xx>..</xx>元素
+bs4.element.Tag
+可使用self.xx来直接访问其包含的第一个<xx>...</xx>的tag对象
+可以使用self['id']来获取或设置<xx id='value'>的value
+对于解析html
+如果属性是class,rel,rev,accept-charset,headers,accesskey返回的是列表
+如tag['class']=['sd','ss']
++-*/+-*/+-*/name d <xx>的xx,赋值的话可直接更改xx为yy
++-*/+-*/+-*/attrs d <xx a='a1' B='b1'>里的{'a':'a1','b':'b1'}属性字典
++-*/+-*/+-*/string d 直接包含的文本内容
+如tag包含有其它tag将返回None
+返回的是bs4.element.NavigableString对象
+可以直接修改其内容,小心会覆盖其它子tag元素
++-*/+-*/+-*/strings d 获取所有的文本列表
++-*/+-*/+-*/stripped_strings d 获取所有的文本列表（除去那些空白的文本）
++-*/+-*/+-*/append m 在子元素最后增加内容
++-*/+-*/+-*/insert m 在子元素列表里插入内容
++-*/+-*/+-*/insert_before m 在本元素之前插入内容
++-*/+-*/+-*/insert_after m 在本元素之后插入内容
++-*/+-*/+-*/clear m 清除子元素列表
++-*/+-*/+-*/extract m 提取本元素
++-*/+-*/+-*/decompose m 删除本元素（包括子元素）
++-*/+-*/+-*/replace_with m 更变其内容
++-*/+-*/+-*/wrap m 外包一个新元素
++-*/+-*/+-*/unwrap m 删除本新元素（不包括子元素）
++-*/+-*/+-*/get_text m 获取没有tag的所有文本,返回unicode
++-*/+-*/NavigableString c 文本text
++-*/+-*/BeautifulSoup c 分析文档
+BeautifulSoup(self, markup='', features=None, from_encoding=None, **kwargs)
+  markup:    需分析的字符串
+  features:  解析器 默认使用可容错的html的解析器
+      'xml'(通常不用),'lxml'(需有安装),'html5lib'(需有安装),'html.parser'(默认)
+  from_encoding:   字符串的编码
+  大多数方法返回的对象有两种
+  bs4.element.Tag 或 bs4.element.NavigableString
+  本身是Tag对象
+  对于xml或非整体的html会自动加上html和body
++-*/+-*/+-*/parent d 父元素Tag
++-*/+-*/+-*/parents d 祖父元素Tag序列
++-*/+-*/+-*/contents d 直接子元素序列
++-*/+-*/+-*/descendants d 所有子孙元素序列
++-*/+-*/+-*/next_sibling d 其后的兄弟元素
++-*/+-*/+-*/next_siblings d 其后的兄弟元素序列
++-*/+-*/+-*/previous_sibling d 其前的兄弟元素
++-*/+-*/+-*/previous_siblings d 其前的兄弟元素序列
++-*/+-*/+-*/next_element d 在其后的元素
++-*/+-*/+-*/next_elements d 在其后的元素序列
++-*/+-*/+-*/previous_element d 在其前的元素
++-*/+-*/+-*/previous_elements d 在其前的元素序列
++-*/+-*/+-*/find_all m 查找所有符合条件的子孙元素，返回列表
+find_all(self, name=None, attrs={}, recursive=True, text=None, limit=None,
+		**kwargs)
+  name:       字符串:  tag名称
+              re对象:  tag名称需符合的正则表达式
+	      列表:    多个tag名称
+	      True:    所有的tag不包括string
+	      函数:    条件测试函数 func(元素)
+  attrs:      {属性名称:条件} 条件同name
+  recursive:  是否查找孙元素
+  text:       查找内容符合条件的NavigableString元素，条件同name
+  limit:      限制结果数量
+  **kwargs:   属性名称=条件 如id='link2',条件同name
+              如find_all('p',id='link1')
+  css形式:    参数都为字符串，则按css模式处理
+              如find_all('p','class1')
+	      这种方式可以查找那些有多种class的元素
+	      如<p class="class1 class2">..</p>
++-*/+-*/+-*/find m 查找符合条件的第一个子孙元素
+find(self, name=None, attrs={}, recursive=True, text=None, **kwargs)
+  name:       字符串:  tag名称
+              re对象:  tag名称需符合的正则表达式
+	      列表:    多个tag名称
+	      True:    所有的tag不包括string
+	      函数:    条件测试函数 func(元素)
+  attrs:      {属性名称:条件} 条件同name
+  recursive:  是否查找孙元素
+  text:       查找内容符合条件的NavigableString元素，条件同name
+  **kwargs:   属性名称=条件 如id='link2',条件同name
+              如find_all('p',id='link1')
+  css形式:    参数都为字符串，则按css模式处理
+              如find_all('p','class1')
+	      这种方式可以查找那些有多种class的元素
+	      如<p class="class1 class2">..</p>
++-*/+-*/+-*/find_parents m 查找所有符合条件的祖父元素，返回列表
+find_parents(self, name=None, attrs={}, limit=None, **kwargs)
+  name:       字符串:  tag名称
+              re对象:  tag名称需符合的正则表达式
+	      列表:    多个tag名称
+	      True:    所有的tag不包括string
+	      函数:    条件测试函数 func(元素)
+  attrs:      {属性名称:条件} 条件同name
+  limit:      限制结果数量
+  **kwargs:   属性名称=条件 如id='link2',条件同name
+              如find_all('p',id='link1')
+  css形式:    参数都为字符串，则按css模式处理
+              如find_all('p','class1')
+	      这种方式可以查找那些有多种class的元素
+	      如<p class="class1 class2">..</p>
++-*/+-*/+-*/find_parent m 查找符合条件的第一个祖父元素
+find_parent(self, name=None, attrs={}, **kwargs)
+  name:       字符串:  tag名称
+              re对象:  tag名称需符合的正则表达式
+	      列表:    多个tag名称
+	      True:    所有的tag不包括string
+	      函数:    条件测试函数 func(元素)
+  attrs:      {属性名称:条件} 条件同name
+  **kwargs:   属性名称=条件 如id='link2',条件同name
+              如find_all('p',id='link1')
+  css形式:    参数都为字符串，则按css模式处理
+              如find_all('p','class1')
+	      这种方式可以查找那些有多种class的元素
+	      如<p class="class1 class2">..</p>
++-*/+-*/+-*/find_next_siblings m 查找所有符合条件在其后的兄弟元素，返回列表
+find_next_siblings(self, name=None, attrs={}, text=None, limit=None, **kwargs)
+  name:       字符串:  tag名称
+              re对象:  tag名称需符合的正则表达式
+	      列表:    多个tag名称
+	      True:    所有的tag不包括string
+	      函数:    条件测试函数 func(元素)
+  attrs:      {属性名称:条件} 条件同name
+  text:       查找内容符合条件的NavigableString元素，条件同name
+  limit:      限制结果数量
+  **kwargs:   属性名称=条件 如id='link2',条件同name
+              如find_all('p',id='link1')
+  css形式:    参数都为字符串，则按css模式处理
+              如find_all('p','class1')
+	      这种方式可以查找那些有多种class的元素
+	      如<p class="class1 class2">..</p>
++-*/+-*/+-*/find_next_sibling m 查找符合条件在其后的第一个兄弟元素
+find_next_sibling(self, name=None, attrs={}, text=None, **kwargs)
+  name:       字符串:  tag名称
+              re对象:  tag名称需符合的正则表达式
+	      列表:    多个tag名称
+	      True:    所有的tag不包括string
+	      函数:    条件测试函数 func(元素)
+  attrs:      {属性名称:条件} 条件同name
+  text:       查找内容符合条件的NavigableString元素，条件同name
+  **kwargs:   属性名称=条件 如id='link2',条件同name
+              如find_all('p',id='link1')
+  css形式:    参数都为字符串，则按css模式处理
+              如find_all('p','class1')
+	      这种方式可以查找那些有多种class的元素
+	      如<p class="class1 class2">..</p>
++-*/+-*/+-*/find_previous_siblings m 查找所有符合条件在其前的兄弟元素，返回列表
+find_previous_siblings(self, name=None, attrs={}, text=None, limit=None, 
+		**kwargs)
+  name:       字符串:  tag名称
+              re对象:  tag名称需符合的正则表达式
+	      列表:    多个tag名称
+	      True:    所有的tag不包括string
+	      函数:    条件测试函数 func(元素)
+  attrs:      {属性名称:条件} 条件同name
+  text:       查找内容符合条件的NavigableString元素，条件同name
+  limit:      限制结果数量
+  **kwargs:   属性名称=条件 如id='link2',条件同name
+              如find_all('p',id='link1')
+  css形式:    参数都为字符串，则按css模式处理
+              如find_all('p','class1')
+	      这种方式可以查找那些有多种class的元素
+	      如<p class="class1 class2">..</p>
++-*/+-*/+-*/find_previous_sibling m 查找符合条件在其前的第一个兄弟元素
+find_previous_sibling(self, name=None, attrs={}, text=None, **kwargs)
+  name:       字符串:  tag名称
+              re对象:  tag名称需符合的正则表达式
+	      列表:    多个tag名称
+	      True:    所有的tag不包括string
+	      函数:    条件测试函数 func(元素)
+  attrs:      {属性名称:条件} 条件同name
+  text:       查找内容符合条件的NavigableString元素，条件同name
+  **kwargs:   属性名称=条件 如id='link2',条件同name
+              如find_all('p',id='link1')
+  css形式:    参数都为字符串，则按css模式处理
+              如find_all('p','class1')
+	      这种方式可以查找那些有多种class的元素
+	      如<p class="class1 class2">..</p>
++-*/+-*/+-*/find_all_next m 查找所有符合条件在其后的元素，返回列表
+find_all_next(self, name=None, attrs={}, text=None, limit=None, **kwargs)
+  name:       字符串:  tag名称
+              re对象:  tag名称需符合的正则表达式
+	      列表:    多个tag名称
+	      True:    所有的tag不包括string
+	      函数:    条件测试函数 func(元素)
+  attrs:      {属性名称:条件} 条件同name
+  text:       查找内容符合条件的NavigableString元素，条件同name
+  limit:      限制结果数量
+  **kwargs:   属性名称=条件 如id='link2',条件同name
+              如find_all('p',id='link1')
+  css形式:    参数都为字符串，则按css模式处理
+              如find_all('p','class1')
+	      这种方式可以查找那些有多种class的元素
+	      如<p class="class1 class2">..</p>
++-*/+-*/+-*/find_next m 查找符合条件在其后的第一个元素，返回列表
+find_next(self, name=None, attrs={}, text=None, **kwargs)
+  name:       字符串:  tag名称
+              re对象:  tag名称需符合的正则表达式
+	      列表:    多个tag名称
+	      True:    所有的tag不包括string
+	      函数:    条件测试函数 func(元素)
+  attrs:      {属性名称:条件} 条件同name
+  text:       查找内容符合条件的NavigableString元素，条件同name
+  **kwargs:   属性名称=条件 如id='link2',条件同name
+              如find_all('p',id='link1')
+  css形式:    参数都为字符串，则按css模式处理
+              如find_all('p','class1')
+	      这种方式可以查找那些有多种class的元素
+	      如<p class="class1 class2">..</p>
++-*/+-*/+-*/find_all_previous m 查找所有符合条件在其前的元素，返回列表
+find_all_previous(self, name=None, attrs={}, text=None, limit=None, **kwargs)
+  name:       字符串:  tag名称
+              re对象:  tag名称需符合的正则表达式
+	      列表:    多个tag名称
+	      True:    所有的tag不包括string
+	      函数:    条件测试函数 func(元素)
+  attrs:      {属性名称:条件} 条件同name
+  text:       查找内容符合条件的NavigableString元素，条件同name
+  limit:      限制结果数量
+  **kwargs:   属性名称=条件 如id='link2',条件同name
+              如find_all('p',id='link1')
+  css形式:    参数都为字符串，则按css模式处理
+              如find_all('p','class1')
+	      这种方式可以查找那些有多种class的元素
+	      如<p class="class1 class2">..</p>
++-*/+-*/+-*/find_previous m 查找符合条件在其前的第一个元素，返回列表
+find_previous(self, name=None, attrs={}, text=None, **kwargs)
+  name:       字符串:  tag名称
+              re对象:  tag名称需符合的正则表达式
+	      列表:    多个tag名称
+	      True:    所有的tag不包括string
+	      函数:    条件测试函数 func(元素)
+  attrs:      {属性名称:条件} 条件同name
+  text:       查找内容符合条件的NavigableString元素，条件同name
+  **kwargs:   属性名称=条件 如id='link2',条件同name
+              如find_all('p',id='link1')
+  css形式:    参数都为字符串，则按css模式处理
+              如find_all('p','class1')
+	      这种方式可以查找那些有多种class的元素
+	      如<p class="class1 class2">..</p>
++-*/+-*/+-*/select m 按css选择模式查找元素，返回列表
+select(str)
+  包含选择:   如 h3 a
+  群组选择:   如 h1.class1 #id
+  直接子选择: 如 h3 > p
+  同胞选择:   如 h2 + p
+  属性选择:   如 img[altsrc] input[type="text"] a[href^*$|="fdfs"]
++-*/+-*/+-*/new_tag m 产生一个新的Tag
+如new_tag('a',href='dfsdf'),常用与其它tag的append
