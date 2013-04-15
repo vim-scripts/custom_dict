@@ -78,6 +78,10 @@ nnoremap <buffer> <silent> + :call <SID>uplevel()<CR>
 vnoremap <buffer> <silent> + :call <SID>uplevel_v()<CR>
 nnoremap <buffer> <silent> - :call <SID>downlevel()<CR>
 vnoremap <buffer> <silent> - :call <SID>downlevel_v()<CR>
+setlocal smartindent
+setlocal expandtab
+setlocal softtabstop=2
+setlocal shiftwidth=2
 setlocal foldexpr=g:Dict_fold_method()
 setlocal foldmethod=expr
 setlocal foldtext=g:Dict_fold_text()
