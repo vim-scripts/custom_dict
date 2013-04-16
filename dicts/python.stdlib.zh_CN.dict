@@ -2,6 +2,27 @@
 /*-+ p:module c:class m:method d:data f:function t:type M:class_method 
 /*-+ _:not is complete word
 +-*/语言 _ 一些说明
++-*/+-*/vim p
++-*/+-*/+-*/complete f 自定义补全(配置此插件类型时用)
+complete(self)
+  应返回pos,result result通常为list(self.nodetree.filter(..)) 
+  self.getpos() 返回默认补全位置
+  self.getline(pos) 返回所在行pos之前的文本(utf-8)
+  self.vimdecode(s) 将vim返回的字符串转码为utf-8字符串
+  self.nodetree.search(func, getchilds=True)
+       func: 为单参数测试函数,其参数可获取.word,.kind,.childs,.father属性
+       getchilds: 为真则不搜索符合条件条目的子孙条目
+                  搜索到的条目存放在返回值的.childs列表里
+                  为假则搜索所有符合条件的条目
+                  返回树状条目，其根条目为空
+  self.nodetree.filter(func) 迭代生成所有符合条件的条目列表
++-*/+-*/+-*/eval f 执行vim表达式
+eval(string)
+  注意表达式为逻辑表达式时，应判断返回值是否为"1"来测试
+  表达式结果为数时返回值为字符串
+  可以返回列表,字典或字符串
++-*/+-*/+-*/command f 执行vim命令
+command(string)
 +-*/+-*/环境变量 _
 +-*/+-*/+-*/PYTHONPATH _ 冒号(windows分号)分隔的模块搜索路径
 +-*/+-*/+-*/PYTHONIOENCODING _ 标准输入输出所使用的编码方式
@@ -1137,12 +1158,8 @@ __import__(name, globals={}, locals={}, fromlist=[], level=0)
   fromlist:指定获取包里的哪些模块(只用于name是包的情况)
   level:  0使用绝对导入,-1使用相对导入
   导入时还是以sys.path为搜索路径
-  name为xxx1.xx.xx时通常只是导入xxx1,要导入xxx1.xx.xx需要
-  def _import(name):
-    mod = __import__(name)
-    components = name.split('.')
-    for comp in components[1:]: mod = getattr(mod,comp)
-    return mod
+  name为xxx1.xx.xx时通常只是导入xxx1
+  要导入xxx1.xx.xx可使用importlib.import_module
 +-*/+-*/BaseException t 异常基类
 +-*/+-*/+-*/args d 引发异常时提供的参数元组
 +-*/+-*/+-*/with_traceback m (python3)
@@ -1230,6 +1247,61 @@ with_traceback(tb)
 +-*/+-*/+-*/+-*/+-*/RuntimeError        e  未知异常
 +-*/+-*/+-*/+-*/+-*/NotImplementedError e  函数不可用错误
 +-*/python相关 _
++-*/+-*/imp p 辅助导入模块
+python3里最好使用importlib模块
++-*/+-*/+-*/get_magic f 返回当前版本pyc文件的标示字节串
++-*/+-*/+-*/lock_held f 
+lock_held()
++-*/+-*/+-*/acquire_lock f 获取导入锁
+acquire_lock()
+  用于多线程。
++-*/+-*/+-*/find_module f 查找模块
+find_module(name[, path])
+  name:   模块名称
+  path:   路径列表(未给出时使用sys.path)
+  返回(文件对象,所在目录,类型三元组)三元组
+  其中类型三元组是get_suffixes里的一种
+  未找到则报错
++-*/+-*/+-*/get_suffixes f 返回模块类型三元组列表
+get_suffixes()
+  返回的列表里元素是(suffix, mode, type)
+  suffix通常为后缀名,mode为文件打开方式如'rb','U'
+  type为PY_SOURCE,PY_COMPILED,C_EXTENSION三值之一
++-*/+-*/+-*/new_module f 创建空模块
+new_module(name)
++-*/+-*/+-*/load_dynamic f 加载动态库模块返回模块对象
+load_dynamic(name,pathname)
+  name:      自设的模块名称
+  pathname:  .so或.dll文件路径
++-*/+-*/+-*/load_compiled f 加载编译模块返回模块对象
+load_compiled(name,pathname)
+  name:      自设的模块名称
+  pathname:  .pyc或.pyo文件路径
++-*/+-*/+-*/load_source f 加载py源文件模块返回模块对象
+load_dynamic(name,pathname)
+  name:      自设的模块名称
+  pathname:  .py文件路径
++-*/+-*/+-*/load_module f 加载模块
+load_module(name, file, pathname, description)
+  通常用此函数加载find_module找到的模块
+  如已加载会重新加载。加载成功将返回模块对象。
+  未成功则报错
++-*/+-*/+-*/reload f 重新加载模块
+reload(module)
++-*/+-*/+-*/release_lock f 释放导入锁
+release_lock()
+  用于多线程
++-*/+-*/+-*/PY_COMPILED d python已编译对象(.pyc)
++-*/+-*/+-*/PKG_DIRECTORY d python包目录
++-*/+-*/+-*/PY_SOURCE d python源文件
++-*/+-*/+-*/PY_FROZEN d 冻结的模块
++-*/+-*/+-*/C_EXTENSION d 动态可加载的C扩展模块
++-*/+-*/+-*/C_BUILTIN d 内置模块
++-*/+-*/importlib p 辅助导入模块
++-*/+-*/+-*/import_module f 用以代替__import__的导入函数
+import_module(name, package=None)
+  name:  模块名，可以带'.'，如xxx.xx或.xxx,..xxx
+  package:  相对模块名(用在name为.xxx或..xxx时)
 +-*/+-*/warnings p 警告模块
 +-*/+-*/+-*/simplefilter f 
 TODO:

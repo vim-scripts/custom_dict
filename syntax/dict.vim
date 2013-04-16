@@ -11,12 +11,12 @@ syn match DictComment /^\/\*-+.*$/
 syn match EnglishLine /^[^+\/][[:graph:] ]\+$/
 syn match WordTab /\t/
 
-hi def link DictComment Special
+hi def link DictComment Comment
 hi def link WordTab Error
 hi def link EnglishLine Identifier
 hi def link WordLine Statement
-hi def link WordFlag Type
-hi def link WordName NonText
-hi def link WordKind VisualNOS
+hi def link WordFlag LineNr
+hi def link WordName Define
+hi def link WordKind Type
 
 let b:current_syntax = 'dict'
